@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Spendly — ERD & DFD</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #0D1117; color: #E6EDF3; }
+.page { max-width: 1200px; margin: 0 auto; padding: 40px 32px; }
+.header { text-align: center; margin-bottom: 60px; padding: 40px; background: linear-gradient(135deg,#1F6FEB22,#1F6FEB11); border: 1px solid #1F6FEB44; border-radius: 16px; }
+.header h1 { font-size: 48px; font-weight: 800; color: #1F6FEB; }
+.header p { font-size: 18px; color: #8B949E; margin-top: 8px; }
+.badge { display: inline-block; background: #1F6FEB22; border: 1px solid #1F6FEB; color: #1F6FEB; padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-top: 12px; }
+.sec-title { font-size: 28px; font-weight: 700; color: #E6EDF3; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
+.sec-title::after { content:''; flex:1; height:2px; background:linear-gradient(90deg,#1F6FEB,transparent); }
+.sec-sub { color: #8B949E; font-size: 14px; margin-bottom: 32px; }
+.section { margin-bottom: 80px; }
+.erd-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; margin-bottom: 32px; }
+.entity { background: #161B22; border: 2px solid #1F6FEB; border-radius: 12px; overflow: hidden; box-shadow: 0 0 24px #1F6FEB22; }
+.ent-hdr { background: #1F6FEB; padding: 12px 16px; font-weight: 700; font-size: 14px; letter-spacing: .5px; text-transform: uppercase; }
+.ent-field { padding: 8px 16px; border-bottom: 1px solid #21262D; display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.ent-field:last-child { border-bottom: none; }
+.pk { background:#F0A80022; color:#F0A800; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px; border:1px solid #F0A80066; flex-shrink:0; }
+.fk { background:#1F6FEB22; color:#1F6FEB; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px; border:1px solid #1F6FEB66; flex-shrink:0; }
+.fn { color:#E6EDF3; font-family:'Courier New',monospace; flex:1; }
+.ft { color:#8B949E; font-size:12px; margin-left:auto; }
+.sp { width:36px; flex-shrink:0; }
+.rel-box { background:#161B22; border:1px solid #30363D; border-radius:12px; padding:24px; }
+.rel-title { font-size:14px; font-weight:700; color:#8B949E; text-transform:uppercase; letter-spacing:1px; margin-bottom:16px; }
+.rel-row { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid #21262D; font-size:14px; }
+.rel-row:last-child { border-bottom:none; }
+.re { background:#1F6FEB22; color:#1F6FEB; padding:4px 12px; border-radius:6px; font-weight:600; font-size:13px; }
+.ra { color:#8B949E; font-size:18px; flex:1; text-align:center; }
+.rl { color:#8B949E; font-size:12px; font-style:italic; margin-left:auto; }
+.ctx { display:flex; align-items:center; justify-content:center; gap:0; padding:32px; background:#161B22; border:1px solid #30363D; border-radius:12px; flex-wrap:wrap; gap:16px; }
+.ext { background:#21262D; border:2px solid #8B949E; border-radius:8px; padding:16px 20px; text-align:center; min-width:110px; }
+.ext .en { font-size:13px; font-weight:600; color:#E6EDF3; }
+.ext .et { font-size:11px; color:#8B949E; margin-top:4px; }
+.sys { background:linear-gradient(135deg,#1F6FEB,#1158C7); border-radius:50%; width:160px; height:160px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:16px; box-shadow:0 0 40px #1F6FEB44; flex-shrink:0; }
+.sys .sn { font-size:16px; font-weight:800; color:white; }
+.sys .ss { font-size:11px; color:#FFFFFFAA; margin-top:4px; }
+.fl { display:flex; flex-direction:column; align-items:center; min-width:100px; }
+.fa { font-size:24px; }
+.flb { font-size:11px; text-align:center; max-width:90px; margin-top:4px; line-height:1.4; }
+.l1 { display:grid; grid-template-columns:180px 1fr 180px; gap:0; background:#161B22; border:1px solid #30363D; border-radius:12px; padding:32px; align-items:start; }
+.l1-ext { display:flex; flex-direction:column; gap:16px; justify-content:center; height:100%; }
+.l1e { background:#21262D; border:2px solid #8B949E; border-radius:8px; padding:12px; text-align:center; font-size:13px; font-weight:600; }
+.procs { display:flex; flex-direction:column; gap:14px; padding:0 20px; }
+.proc { background:#1F6FEB11; border:2px solid #1F6FEB; border-radius:10px; padding:14px; display:flex; gap:14px; }
+.pn { background:#1F6FEB; color:white; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; margin-top:2px; }
+.pt { font-size:14px; font-weight:700; color:#E6EDF3; }
+.pd { font-size:12px; color:#8B949E; margin-top:4px; line-height:1.4; }
+.pf { display:flex; flex-wrap:wrap; gap:5px; margin-top:8px; }
+.fi { background:#3FB95022; color:#3FB950; border:1px solid #3FB95066; font-size:11px; padding:2px 7px; border-radius:4px; }
+.fo { background:#F0A80022; color:#F0A800; border:1px solid #F0A80066; font-size:11px; padding:2px 7px; border-radius:4px; }
+.dss { display:flex; flex-direction:column; gap:12px; justify-content:center; height:100%; }
+.ds { background:#21262D; border-top:2px solid #1F6FEB; border-bottom:2px solid #1F6FEB; padding:10px 12px; }
+.di { font-size:11px; color:#1F6FEB; font-weight:700; }
+.dn { font-size:13px; color:#E6EDF3; font-weight:600; margin-top:2px; }
+.legend { display:flex; gap:20px; flex-wrap:wrap; padding:16px 20px; background:#161B22; border:1px solid #30363D; border-radius:12px; margin-top:20px; }
+.li { display:flex; align-items:center; gap:8px; font-size:13px; color:#8B949E; }
+.lb { width:24px; height:14px; border-radius:3px; }
+.footer { text-align:center; margin-top:60px; padding:20px; border-top:1px solid #21262D; color:#8B949E; font-size:13px; }
+</style>
+</head>
+<body>
+<div class="page">
+<div class="header">
+  <h1>SPENDLY</h1>
+  <p>Entity Relationship Diagram &amp; Data Flow Diagrams</p>
+  <div class="badge">Sprint 2 &mdash; Requirements &amp; Design &nbsp;|&nbsp; v1.0 &nbsp;|&nbsp; March 2026 &nbsp;|&nbsp; Nandun De Silva</div>
+</div>
+
+<!-- ERD -->
+<div class="section">
+  <div class="sec-title">Entity Relationship Diagram (ERD)</div>
+  <p class="sec-sub">Logical data model for Spendly v1.0 &mdash; all entities stored locally via AsyncStorage</p>
+  <div class="erd-grid">
+    <div class="entity">
+      <div class="ent-hdr">&#128184; TRANSACTION</div>
+      <div class="ent-field"><span class="pk">PK</span><span class="fn">id</span><span class="ft">UUID</span></div>
+      <div class="ent-field"><span class="fk">FK</span><span class="fn">categoryId</span><span class="ft">UUID</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">type</span><span class="ft">ENUM</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">amount</span><span class="ft">DECIMAL</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">date</span><span class="ft">DATE</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">note</span><span class="ft">VARCHAR(200)</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">createdAt</span><span class="ft">DATETIME</span></div>
+    </div>
+    <div class="entity">
+      <div class="ent-hdr">&#127991;&#65039; CATEGORY</div>
+      <div class="ent-field"><span class="pk">PK</span><span class="fn">id</span><span class="ft">UUID</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">name</span><span class="ft">VARCHAR(50)</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">type</span><span class="ft">ENUM</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">icon</span><span class="ft">VARCHAR(10)</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">isCustom</span><span class="ft">BOOLEAN</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">color</span><span class="ft">VARCHAR(7)</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">createdAt</span><span class="ft">DATETIME</span></div>
+    </div>
+    <div class="entity">
+      <div class="ent-hdr">&#127919; BUDGET</div>
+      <div class="ent-field"><span class="pk">PK</span><span class="fn">id</span><span class="ft">UUID</span></div>
+      <div class="ent-field"><span class="fk">FK</span><span class="fn">categoryId</span><span class="ft">UUID</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">amount</span><span class="ft">DECIMAL</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">month</span><span class="ft">VARCHAR(7)</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">alertSent80</span><span class="ft">BOOLEAN</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">alertSent100</span><span class="ft">BOOLEAN</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">createdAt</span><span class="ft">DATETIME</span></div>
+    </div>
+    <div class="entity">
+      <div class="ent-hdr">&#9881;&#65039; USER_SETTINGS</div>
+      <div class="ent-field"><span class="pk">PK</span><span class="fn">id</span><span class="ft">UUID</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">theme</span><span class="ft">ENUM</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">currency</span><span class="ft">VARCHAR(5)</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">biometricEnabled</span><span class="ft">BOOLEAN</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">pinHash</span><span class="ft">SecureStore</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">updatedAt</span><span class="ft">DATETIME</span></div>
+    </div>
+    <div class="entity">
+      <div class="ent-hdr">&#128228; EXPORT_LOG</div>
+      <div class="ent-field"><span class="pk">PK</span><span class="fn">id</span><span class="ft">UUID</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">exportedAt</span><span class="ft">DATETIME</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">dateRangeFrom</span><span class="ft">DATE</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">dateRangeTo</span><span class="ft">DATE</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">recordCount</span><span class="ft">INTEGER</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">filePath</span><span class="ft">VARCHAR(255)</span></div>
+    </div>
+    <div class="entity">
+      <div class="ent-hdr">&#128276; NOTIFICATION_LOG</div>
+      <div class="ent-field"><span class="pk">PK</span><span class="fn">id</span><span class="ft">UUID</span></div>
+      <div class="ent-field"><span class="fk">FK</span><span class="fn">budgetId</span><span class="ft">UUID</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">type</span><span class="ft">ENUM</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">message</span><span class="ft">VARCHAR(255)</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">sentAt</span><span class="ft">DATETIME</span></div>
+      <div class="ent-field"><span class="sp"></span><span class="fn">isRead</span><span class="ft">BOOLEAN</span></div>
+    </div>
+  </div>
+  <div class="rel-box">
+    <div class="rel-title">Relationships</div>
+    <div class="rel-row"><div class="re">CATEGORY</div><div class="ra">&mdash;&mdash; 1 : M &mdash;&mdash;&rsaquo;</div><div class="re">TRANSACTION</div><div class="rl">One category contains many transactions</div></div>
+    <div class="rel-row"><div class="re">CATEGORY</div><div class="ra">&mdash;&mdash; 1 : M &mdash;&mdash;&rsaquo;</div><div class="re">BUDGET</div><div class="rl">One category has many monthly budgets</div></div>
+    <div class="rel-row"><div class="re">BUDGET</div><div class="ra">&mdash;&mdash; 1 : M &mdash;&mdash;&rsaquo;</div><div class="re">NOTIFICATION_LOG</div><div class="rl">One budget generates many alert notifications</div></div>
+    <div class="rel-row"><div class="re">USER_SETTINGS</div><div class="ra">&mdash;&mdash; 1 : 1 &mdash;&mdash;&rsaquo;</div><div class="re">All Entities</div><div class="rl">Single settings record governs the entire app</div></div>
+  </div>
+</div>
+
+<!-- DFD Level 0 -->
+<div class="section">
+  <div class="sec-title">DFD &mdash; Level 0 (Context Diagram)</div>
+  <p class="sec-sub">Spendly as a single black-box process with all external entities and major data flows</p>
+  <div class="ctx">
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div class="ext"><div class="en">&#128100; User</div><div class="et">Primary Actor</div></div>
+      <div class="ext"><div class="en">&#128272; Biometric Sensor</div><div class="et">Device Hardware</div></div>
+    </div>
+    <div class="fl" style="margin:0 16px;">
+      <div class="flb" style="color:#3FB950;">&#9658; Transaction data<br>&#9658; PIN / Biometric<br>&#9658; Budget limits<br>&#9658; Settings prefs</div>
+      <div class="fa" style="color:#3FB950;">&#8594;</div>
+    </div>
+    <div class="sys"><div class="sn">SPENDLY</div><div class="ss">Personal Finance<br>Tracker v1.0</div></div>
+    <div class="fl" style="margin:0 16px;">
+      <div class="fa" style="color:#F0A800;">&#8594;</div>
+      <div class="flb" style="color:#F0A800;">&#9664; Balance &amp; charts<br>&#9664; Budget alerts<br>&#9664; Transaction list<br>&#9664; CSV export file</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div class="ext"><div class="en">&#128241; Device Storage</div><div class="et">AsyncStorage</div></div>
+      <div class="ext"><div class="en">&#128193; Downloads Folder</div><div class="et">File System</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- DFD Level 1 -->
+<div class="section">
+  <div class="sec-title">DFD &mdash; Level 1 (System Decomposition)</div>
+  <p class="sec-sub">6 core processes, data stores, and all major data flows within Spendly</p>
+  <div class="l1">
+    <div class="l1-ext">
+      <div class="l1e">&#128100; User</div>
+      <div class="l1e">&#128272; Biometric Sensor</div>
+      <div class="l1e">&#128241; AsyncStorage</div>
+      <div class="l1e">&#128193; Downloads Folder</div>
+    </div>
+    <div class="procs">
+      <div class="proc"><div class="pn">1</div><div><div class="pt">Authenticate User</div><div class="pd">Validates PIN or biometric. Grants or denies access. Stores encrypted PIN via Expo SecureStore.</div><div class="pf"><span class="fi">&#9658; PIN / Biometric</span><span class="fi">&#9658; Stored PIN hash</span><span class="fo">&#9664; Auth granted / denied</span></div></div></div>
+      <div class="proc"><div class="pn">2</div><div><div class="pt">Manage Transactions</div><div class="pd">Creates, reads, updates, and deletes income and expense records. Validates input, triggers balance recalculation.</div><div class="pf"><span class="fi">&#9658; Transaction data</span><span class="fo">&#9664; Transaction list</span><span class="fo">&#9664; Updated balance</span></div></div></div>
+      <div class="proc"><div class="pn">3</div><div><div class="pt">Calculate Dashboard</div><div class="pd">Aggregates transactions by month. Calculates totals, pie chart data, bar chart data, and trend line points.</div><div class="pf"><span class="fi">&#9658; Transaction records</span><span class="fo">&#9664; Chart data</span><span class="fo">&#9664; Monthly summary</span></div></div></div>
+      <div class="proc"><div class="pn">4</div><div><div class="pt">Manage Budgets &amp; Alerts</div><div class="pd">Stores monthly budgets per category. Compares spending against limits. Fires 80% and 100% exceeded alerts.</div><div class="pf"><span class="fi">&#9658; Budget limit</span><span class="fi">&#9658; Category spending</span><span class="fo">&#9664; Alert notification</span></div></div></div>
+      <div class="proc"><div class="pn">5</div><div><div class="pt">Filter &amp; Search</div><div class="pd">Applies user-defined filters (type, category, date range) and keyword search to the transaction list in real time.</div><div class="pf"><span class="fi">&#9658; Filter criteria</span><span class="fi">&#9658; Search keyword</span><span class="fo">&#9664; Filtered list</span></div></div></div>
+      <div class="proc"><div class="pn">6</div><div><div class="pt">Export Data</div><div class="pd">Reads transactions from AsyncStorage, applies optional date filter, generates CSV, writes to device Downloads folder.</div><div class="pf"><span class="fi">&#9658; Export request</span><span class="fi">&#9658; Date range filter</span><span class="fo">&#9664; CSV file</span></div></div></div>
+    </div>
+    <div class="dss">
+      <div class="ds"><div class="di">D1</div><div class="dn">Transactions Store</div></div>
+      <div class="ds"><div class="di">D2</div><div class="dn">Categories Store</div></div>
+      <div class="ds"><div class="di">D3</div><div class="dn">Budgets Store</div></div>
+      <div class="ds"><div class="di">D4</div><div class="dn">Settings Store</div></div>
+      <div class="ds"><div class="di">D5</div><div class="dn">SecureStore (PIN)</div></div>
+      <div class="ds"><div class="di">D6</div><div class="dn">Notification Log</div></div>
+    </div>
+  </div>
+  <div class="legend">
+    <div class="li"><div class="lb" style="background:#21262D;border:2px solid #8B949E;"></div> External Entity</div>
+    <div class="li"><div class="lb" style="background:#1F6FEB22;border:2px solid #1F6FEB;border-radius:50%;"></div> Process</div>
+    <div class="li"><div class="lb" style="border-top:2px solid #1F6FEB;border-bottom:2px solid #1F6FEB;background:#21262D;"></div> Data Store</div>
+    <div class="li"><span style="color:#3FB950;font-size:16px;">&#9658;</span> Data Flow IN</div>
+    <div class="li"><span style="color:#F0A800;font-size:16px;">&#9658;</span> Data Flow OUT</div>
+    <div class="li"><span style="color:#F0A800;font-size:11px;font-weight:700;">PK</span>&nbsp;Primary Key &nbsp;|&nbsp; <span style="color:#1F6FEB;font-size:11px;font-weight:700;">FK</span>&nbsp;Foreign Key</div>
+  </div>
+</div>
+
+<div class="footer">Spendly &mdash; Personal Finance Tracker &nbsp;|&nbsp; ERD &amp; DFD Documentation &nbsp;|&nbsp; v1.0 &nbsp;|&nbsp; March 2026 &nbsp;|&nbsp; Nandun De Silva</div>
+</div>
+</body>
+</html>
